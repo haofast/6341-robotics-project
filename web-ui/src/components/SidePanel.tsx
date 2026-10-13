@@ -4,7 +4,7 @@ import { Card } from "./ui/card";
 
 export function SidePanel() {
   return (
-    <Card className="w-100 p-4">
+    <Card className="w-100 overflow-y-auto p-4">
       <div className="space-y-2">
         <div className="text-[10px] font-light tracking-widest">
           ITEMS
