@@ -1,8 +1,11 @@
+import { SidePanel } from "./components/SidePanel"
+import { SampleViewArea } from "./components/SampleViewArea"
 
-function App() {
+export function App() {
   return (
-    <div className="p-4">
-      hello world
+    <div className="flex min-h-svh p-6">
+      <SampleViewArea />
+      <SidePanel />
     </div>
   )
 }
