@@ -35,7 +35,7 @@ Sends the target positions of the blocks to the API service. Upon receiving the 
 
 ### Description
 
-Retrieves the processing status of the most recent position request.
+Retrieves the processing status of the most recent motion planning request. Note that a motion planning request is not the same thing as the motion execution
 
 ### Trigger Behavior & Status Codes
 
