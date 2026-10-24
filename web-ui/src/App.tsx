@@ -1,11 +1,15 @@
 import { SidePanel } from "./components/SidePanel"
-import { ViewArea } from "./components/ViewArea"
+import { ToolPanel } from "./components/ToolPanel"
+import { GridSpace } from "./components/workspace/GridSpace"
+import { WorkspacePanel } from "./components/WorkspacePanel"
 
 export function App() {
   return (
-    <div className="flex min-h-svh max-h-svh p-6">
-      <ViewArea />
+    <div className="w-screen h-screen">
+      <GridSpace />
+      <ToolPanel />
       <SidePanel />
+      <WorkspacePanel />
     </div>
   )
 }

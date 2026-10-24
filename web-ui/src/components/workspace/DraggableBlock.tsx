@@ -2,23 +2,16 @@ import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { TransformControls } from '@react-three/drei';
 import type { TransformControls as TransformControlsImpl } from 'three-stdlib';
-import type { Block, Position, GridDimensions } from '../types/common';
+import type { Block } from '../../types/workspace';
+import { workspaceSnap, setSelectedBlock, updateBlockPosition } from '@/state/workspace';
+import { useSnapshot } from 'valtio';
 
 interface DraggableBlockProps {
   block: Block;
-  isSelected: boolean;
-  dimensions: GridDimensions;
-  onSelect: (id: string | null) => void;
-  onUpdate: (id: string, newPos: Position) => void;
 }
 
-export const DraggableBlock: React.FC<DraggableBlockProps> = ({
-  block,
-  isSelected,
-  dimensions,
-  onSelect,
-  onUpdate,
-}) => {
+export const DraggableBlock: React.FC<DraggableBlockProps> = ({ block }) => {
+  const { dimensions, selectedBlock } = useSnapshot(workspaceSnap)
   const meshRef = useRef<THREE.Mesh>(null!);
   const transformRef = useRef<TransformControlsImpl>(null);
   const [maxX, maxY, maxZ] = dimensions;
@@ -38,7 +31,7 @@ export const DraggableBlock: React.FC<DraggableBlockProps> = ({
       let logicalY = Math.max(0, Math.min(maxY - 1, Math.round(pos.y - 0.5)));
       let logicalZ = Math.max(0, Math.min(maxZ - 1, Math.round(pos.z - 0.5)));
       pos.set(logicalX + 0.5, logicalY + 0.5, logicalZ + 0.5);
-      onUpdate(block.id, { x: logicalX, y: logicalY, z: logicalZ });
+      updateBlockPosition(block.id, { x: logicalX, y: logicalY, z: logicalZ });
     }
   }
 
@@ -51,7 +44,7 @@ export const DraggableBlock: React.FC<DraggableBlockProps> = ({
       <mesh
         ref={meshRef}
         position={getBlockPosition()}
-        onClick={() => onSelect(block.id)}
+        onClick={() => setSelectedBlock(block.id)}
         castShadow
         receiveShadow
       >
@@ -63,7 +56,7 @@ export const DraggableBlock: React.FC<DraggableBlockProps> = ({
         />
       </mesh>
 
-      {isSelected && (
+      {block.id === selectedBlock?.id && (
         <TransformControls
           ref={transformRef}
           object={meshRef}

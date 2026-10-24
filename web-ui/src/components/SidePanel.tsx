@@ -3,22 +3,9 @@ import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 
 export function SidePanel() {
+
   return (
-    <Card className="w-100 overflow-y-auto p-4">
-      <div className="space-y-2">
-        <div className="text-[10px] font-light tracking-widest">
-          ITEMS
-        </div>
-        <ul>
-          <li>12 Red Blocks</li>
-          <li>6 Blue Blocks</li>
-          <li>4 Green Blocks</li>
-        </ul>
-        <Button className="w-full" variant="outline">
-          More Info
-        </Button>
-      </div>
-      <hr />
+    <Card className="fixed top-6 right-6 bottom-6 w-80 p-4 overflow-y-auto bg-background/75 backdrop-blur">
       <div className="space-y-2">
         <div className="text-[10px] font-light tracking-widest">
           POSITION CONSOLE

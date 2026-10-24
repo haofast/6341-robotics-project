@@ -1,3 +1,9 @@
+export type Dimensions = [
+  width: number,
+  height: number,
+  depth: number,
+];
+
 export interface Position {
   x: number;
   y: number;
@@ -10,9 +16,3 @@ export interface Block {
   color: string;
   label?: string;
 }
-
-export type GridDimensions = [
-  width: number,
-  height: number,
-  depth: number,
-];

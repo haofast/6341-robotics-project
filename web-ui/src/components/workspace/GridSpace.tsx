@@ -1,25 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSnapshot } from 'valtio';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Grid } from '@react-three/drei';
+import { workspaceSnap, setSelectedBlock } from '@/state/workspace';
 import { DraggableBlock } from './DraggableBlock';
-import type { Block, Position, GridDimensions } from '../types/common';
 import * as THREE from 'three';
 
-export interface GridSpaceProps {
-  dimensions: GridDimensions;
-  blocks: Block[];
-  onBlockUpdate: (id: string, newPos: Position) => void;
-  selectedBlockId?: string | null;
-}
 
-export const GridSpace: React.FC<GridSpaceProps> = ({
-  dimensions,
-  blocks,
-  onBlockUpdate,
-  selectedBlockId: externalSelectedId,
-}) => {
-  const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
-  const selectedId = externalSelectedId !== undefined ? externalSelectedId : selectedBlock;
+export const GridSpace: React.FC = () => {
+  const { placedBlocks, dimensions } = useSnapshot(workspaceSnap)
   const [width, height, depth] = dimensions;
 
   function handleCanvasClick(event: React.PointerEvent<HTMLDivElement>) {
@@ -30,11 +19,12 @@ export const GridSpace: React.FC<GridSpaceProps> = ({
 
   return (
     <Canvas
-      camera={{ position: [width * 1.5, height * 1.5, depth * 1.5], fov: 50 }}
+      camera={{ position: [width * 2, height * 2, depth * 2], fov: 50}}
       onPointerDown={handleCanvasClick}
       shadows
     >
       <ambientLight intensity={0.6} />
+
       <directionalLight
         position={[15, 20, 15]}
         intensity={1.2}
@@ -65,14 +55,10 @@ export const GridSpace: React.FC<GridSpaceProps> = ({
         <lineBasicMaterial color="#ffffff" opacity={0.25} transparent />
       </lineSegments>
 
-      {blocks.map((block) => (
+      {placedBlocks.map((block) => (
         <DraggableBlock
           key={block.id}
           block={block}
-          isSelected={selectedId === block.id}
-          dimensions={dimensions}
-          onSelect={setSelectedBlock}
-          onUpdate={onBlockUpdate}
         />
       ))}
     </Canvas>
