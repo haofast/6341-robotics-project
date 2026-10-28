@@ -1,6 +1,23 @@
 import { workspaceSnap } from "@/state/workspace";
 import type { Block, Position } from "@/types/workspace";
 
+export function randomizeBlockPositions() {
+  workspaceSnap.placedBlocks.forEach((b) => b.position = getRandomFreePosition())
+  applyBlockGravity()
+}
+
+export function applyBlockGravity() {
+  for (let i = 1; i < workspaceSnap.dimensions[1]; i++) {
+    getBlocksAtHeight(i).forEach(block => {
+      while (isBlockFloating(block)) block.position.y--;
+    });
+  }
+}
+
+export function getBlocksAtHeight(height: number) {
+  return workspaceSnap.placedBlocks.filter((b) => b.position.y === height)
+}
+
 export function getRandomFreePosition() {
   const [width, height, depth] = workspaceSnap.dimensions;
   const maxAttempts = 1000; // Maximum number of attempts to find a free position

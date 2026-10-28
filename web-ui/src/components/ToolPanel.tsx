@@ -1,5 +1,6 @@
 import { BroomSparklesIcon, DicesIcon, PlusIcon, ScanBoxIcon } from "lucide-react";
-import { MAX_BLOCKS_PER_COLOR, addBlock, randomizeBlockPositions, resetWorkspace, workspaceSnap } from "@/state/workspace";
+import { MAX_BLOCKS_PER_COLOR, addBlock, resetWorkspace, workspaceSnap } from "@/state/workspace";
+import { randomizeBlockPositions } from "@/utilities/workspace";
 import { COLOR } from "@/constants/color";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";

@@ -1,6 +1,6 @@
 import { COLOR } from "@/constants/color";
 import type { Block, Dimensions, Position } from "@/types/workspace"
-import { findNextFreePosition, getRandomFreePosition, isBlockFloating, isPositionOccupied } from "@/utilities/workspace";
+import { findNextFreePosition } from "@/utilities/workspace";
 import { v4 as uuid } from 'uuid';
 import { proxy } from "valtio"
 
@@ -37,23 +37,6 @@ export const workspaceSnap = proxy<WorkspaceSnap>({
 export function resetWorkspace() {
   workspaceSnap.placedBlocks = []
   setSelectedBlock(null)
-}
-
-export function randomizeBlockPositions() {
-  workspaceSnap.placedBlocks.forEach((b) => b.position = getRandomFreePosition())
-  applyBlockGravity()
-}
-
-export function applyBlockGravity() {
-  for (let i = 1; i < workspaceSnap.dimensions[1]; i++) {
-    getBlocksAtHeight(i).forEach(block => {
-      while (isBlockFloating(block)) block.position.y--;
-    });
-  }
-}
-
-export function getBlocksAtHeight(height: number) {
-  return workspaceSnap.placedBlocks.filter((b) => b.position.y === height)
 }
 
 export function getBlock(blockId: string | null) {
