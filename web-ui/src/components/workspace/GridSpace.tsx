@@ -2,18 +2,19 @@ import React from 'react';
 import { useSnapshot } from 'valtio';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Grid } from '@react-three/drei';
-import { workspaceSnap, setSelectedBlock } from '@/state/workspace';
+import { workspaceState } from '@/state/workspace';
 import { DraggableBlock } from './DraggableBlock';
 import * as THREE from 'three';
+import { WorkspaceUtils } from '@/utilities/workspace';
 
 
 export const GridSpace: React.FC = () => {
-  const { placedBlocks, dimensions } = useSnapshot(workspaceSnap)
-  const [width, height, depth] = dimensions;
+  const { placedBlocks, dimensions } = useSnapshot(workspaceState)
+  const { width, height, depth } = dimensions;
 
   function handleCanvasClick(event: React.PointerEvent<HTMLDivElement>) {
     if (event.target === event.currentTarget) {
-      setSelectedBlock(null);
+      WorkspaceUtils.setSelectedBlock(null);
     }
   }
 

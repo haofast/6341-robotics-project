@@ -1,10 +1,10 @@
-import { isBlockOverlapping, isBlockFloating, isBlockPositionValid } from "@/utilities/workspace";
 import { Card } from "./ui/card";
-import { workspaceSnap } from "@/state/workspace";
+import { workspaceState } from "@/state/workspace";
 import { useSnapshot } from "valtio";
+import { BlockUtil } from "@/utilities/block";
 
 export function WorkspacePanel() {
-  const { selectedBlock } = useSnapshot(workspaceSnap)
+  const { selectedBlock } = useSnapshot(workspaceState)
 
   return (
     <>
@@ -19,9 +19,9 @@ export function WorkspacePanel() {
                 <div>id: {selectedBlock.id}</div>
                 <div>position: {JSON.stringify(selectedBlock.position)}</div>
                 <div>color: {selectedBlock.color}</div>
-                <div>overlapping: {isBlockOverlapping(selectedBlock).toString()}</div>
-                <div>floating: {isBlockFloating(selectedBlock).toString()}</div>
-                <div>valid position: {isBlockPositionValid(selectedBlock).toString()}</div>
+                <div>overlapping: {BlockUtil.isOverlapping(selectedBlock).toString()}</div>
+                <div>floating: {BlockUtil.isFloating(selectedBlock).toString()}</div>
+                <div>valid position: {BlockUtil.isInValidPosition(selectedBlock).toString()}</div>
               </div>
             </>
           </div>

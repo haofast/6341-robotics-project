@@ -1,91 +1,93 @@
-import { workspaceSnap } from "@/state/workspace";
-import type { Block, Position } from "@/types/workspace";
+import { workspaceState } from "@/state/workspace";
+import { BlockUtil } from "./block";
+import type { Block, Position } from "@/types/common";
+import { D, PositionUtil } from "./position";
+import { v4 as uuid } from 'uuid';
 
-export function randomizeBlockPositions() {
-  workspaceSnap.placedBlocks.forEach((b) => b.position = getRandomFreePosition())
-  applyBlockGravity()
-}
+export class WorkspaceUtils {
 
-function applyBlockGravity() {
-  for (let i = 1; i < workspaceSnap.dimensions[1]; i++) {
-    getBlocksAtHeight(i).forEach(block => {
-      while (isBlockFloating(block)) block.position.y--;
-    });
+  public static clear() {
+    workspaceState.placedBlocks = []
+    workspaceState.selectedBlock = null
   }
-}
 
-function getBlocksAtHeight(height: number) {
-  return workspaceSnap.placedBlocks.filter((b) => b.position.y === height)
-}
+  public static addBlock(block: Omit<Block, "id" | "position">) {
+    const newBlock = { id: uuid(), position: WorkspaceUtils.getNextFreePosition(), ...block }
+    workspaceState.placedBlocks.push(newBlock);
+    workspaceState.selectedBlock = newBlock;
+  }
 
-function getRandomFreePosition() {
-  const [width, height, depth] = workspaceSnap.dimensions;
-  const maxAttempts = 1000; // Maximum number of attempts to find a free position
-  let attempts = 0;
+  public static updateBlockPosition(block: Block, newPosition: Position) {
+    workspaceState.placedBlocks.find((b) => b.id === block.id)!.position = newPosition;
+  }
 
-  while (attempts < maxAttempts) {
-    const position: Position = {
-      x: Math.floor(Math.random() * width),
-      y: Math.floor(Math.random() * height),
-      z: Math.floor(Math.random() * depth)
-    };
+  public static setSelectedBlock(blockId: string | null) {
+    workspaceState.selectedBlock = workspaceState.placedBlocks.find((b) => b.id === blockId) ?? null
+  }
 
-    if (!isPositionOccupied(position)) {
-      return position;
+  public static scatterBlocks() {
+    this.randomizeBlockPositions()
+    this.applyGravityToBlocksPositions()
+  }
+
+  private static randomizeBlockPositions() {
+    workspaceState.placedBlocks.forEach((block) => {
+      block.position = this.getRandomFreePosition()
+    })
+  }
+
+  private static applyGravityToBlocksPositions() {
+    for (let height = 1; height < workspaceState.dimensions.height; height++) {
+      this.getBlocksAtHeight(height).forEach((block) => BlockUtil.applyGravity(block));
+    }
+  }
+
+  public static getNextFreePosition() {
+    for (const position of this.getCoordinates()) {
+      if (this.isPositionFree(position)) return position
     }
 
-    console.log("position retry")
-    attempts++;
+    throw new Error("no free positions left")
   }
 
-  throw new Error("no free positions left");
-}
+  private static getRandomFreePosition() {
+    for (let attempts = 0; attempts < 1000; attempts++) {
+      const position = this.getRandomPosition();
+      if (this.isPositionFree(position)) return position;
+    }
 
-export function findNextFreePosition() {
-  const [width, height, depth] = workspaceSnap.dimensions
+    throw new Error("no free positions left");
+  }
 
-  for (let j = 0; j < height; j++) {
-    for (let k = 0; k < depth; k++) {
-      for (let i = 0; i < width; i++) {
-        if (!isPositionOccupied({ x: i, y: j, z: k })) {
-          return { x: i, y: j, z: k }
+  private static getRandomPosition() {
+    const { width, height, depth } = workspaceState.dimensions
+    const lateral = Math.floor(Math.random() * width)
+    const superior = Math.floor(Math.random() * height)
+    const anterior = Math.floor(Math.random() * depth)
+    return PositionUtil.dPosToPos({ lateral, superior, anterior })
+  }
+
+  private static isPositionFree(position: Position) {
+    return !workspaceState.placedBlocks.some((block) => (
+      PositionUtil.isSame(block.position, position)
+    ))
+  }
+
+  private static getBlocksAtHeight(height: number) {
+    return workspaceState.placedBlocks.filter((block) => (
+      block.position[D.superior] === height
+    ))
+  }
+
+  private static * getCoordinates() {
+    const { width, height, depth } = workspaceState.dimensions
+
+    for (let superior = 0; superior < height; superior++) {
+      for (let anterior = 0; anterior < depth; anterior++) {
+        for (let lateral = 0; lateral < width; lateral++) {
+          yield PositionUtil.dPosToPos({ lateral, superior, anterior })
         }
       }
     }
   }
-
-  throw new Error("no free positions left")
 }
-
-function isPositionOccupied(position: Position) {
-  return workspaceSnap.placedBlocks.some(b => (
-    b.position.x === position.x
-    && b.position.z === position.z
-    && b.position.y === position.y
-  ))
-}
-
-export function isBlockOverlapping(block: Block) {
-  return workspaceSnap.placedBlocks.some(b => (
-    b.id !== block.id
-    && b.position.x === block.position.x
-    && b.position.z === block.position.z
-    && b.position.y === block.position.y
-  ))
-}
-
-export function isBlockFloating(block: Block) {
-  if (block.position.y === 0) return false;
-
-  return !workspaceSnap.placedBlocks.some(b => (
-    b.id !== block.id
-    && b.position.x === block.position.x
-    && b.position.z === block.position.z
-    && b.position.y === block.position.y - 1
-  ))
-}
-
-export function isBlockPositionValid(block: Block) {
-  return !isBlockFloating(block) && !isBlockOverlapping(block)
-}
-

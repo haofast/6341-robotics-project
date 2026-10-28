@@ -2,49 +2,56 @@ import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { TransformControls } from '@react-three/drei';
 import type { TransformControls as TransformControlsImpl } from 'three-stdlib';
-import type { Block } from '../../types/workspace';
-import { workspaceSnap, setSelectedBlock, updateBlockPosition } from '@/state/workspace';
+import type { Block, Position } from '../../types/common';
+import { workspaceState } from '@/state/workspace';
 import { useSnapshot } from 'valtio';
+import { WorkspaceUtils } from '@/utilities/workspace';
+import { D, PositionUtil } from '@/utilities/position';
 
 interface DraggableBlockProps {
   block: Block;
 }
 
 export const DraggableBlock: React.FC<DraggableBlockProps> = ({ block }) => {
-  const { dimensions, selectedBlock } = useSnapshot(workspaceSnap)
+  const { dimensions, selectedBlock } = useSnapshot(workspaceState)
   const meshRef = useRef<THREE.Mesh>(null!);
   const transformRef = useRef<TransformControlsImpl>(null);
-  const [maxX, maxY, maxZ] = dimensions;
 
-  function getBlockPosition(): [number, number, number] {
-    return [
-      block.position.x + 0.5,
-      block.position.y + 0.5,
-      block.position.z + 0.5,
-    ]
+  function getAdjustedBlockPos(position: Position) {
+    const positionVector = PositionUtil.posTo3DVec(position)
+    positionVector[0] += 0.5
+    positionVector[1] += 0.5
+    positionVector[2] += 0.5
+    return positionVector
   }
 
   function handleObjectChange() {
     if (meshRef.current) {
-      const pos = meshRef.current.position;
-      let logicalX = Math.max(0, Math.min(maxX - 1, Math.round(pos.x - 0.5)));
-      let logicalY = Math.max(0, Math.min(maxY - 1, Math.round(pos.y - 0.5)));
-      let logicalZ = Math.max(0, Math.min(maxZ - 1, Math.round(pos.z - 0.5)));
-      pos.set(logicalX + 0.5, logicalY + 0.5, logicalZ + 0.5);
-      updateBlockPosition(block.id, { x: logicalX, y: logicalY, z: logicalZ });
+      const meshRefPosition = meshRef.current.position;
+      const { width, height, depth } = dimensions;
+
+      let lateral = Math.max(0, Math.min(width - 1, Math.round(meshRefPosition.x - 0.5)));
+      let superior = Math.max(0, Math.min(height - 1, Math.round(meshRefPosition.y - 0.5)));
+      let anterior = Math.max(0, Math.min(depth - 1, Math.round(meshRefPosition.z - 0.5)));
+
+      const dPosition = { lateral, superior, anterior }
+      const position = PositionUtil.dPosToPos(dPosition)
+
+      WorkspaceUtils.updateBlockPosition(block, position)
+      meshRefPosition.set(...getAdjustedBlockPos(position))
     }
   }
 
   useEffect(() => {
-    meshRef.current?.position.set(...getBlockPosition());
+    meshRef.current?.position.set(...getAdjustedBlockPos(block.position));
   }, [block.position]);
 
   return (
     <>
       <mesh
         ref={meshRef}
-        position={getBlockPosition()}
-        onClick={() => setSelectedBlock(block.id)}
+        position={getAdjustedBlockPos(block.position)}
+        onClick={() => WorkspaceUtils.setSelectedBlock(block.id)}
         castShadow
         receiveShadow
       >
