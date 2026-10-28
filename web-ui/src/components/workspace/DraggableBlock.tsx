@@ -6,7 +6,7 @@ import type { Block, Position } from '../../types/common';
 import { workspaceState } from '@/state/workspace';
 import { useSnapshot } from 'valtio';
 import { WorkspaceUtils } from '@/utilities/workspace';
-import { D, PositionUtil } from '@/utilities/position';
+import { PositionUtil } from '@/utilities/position';
 
 interface DraggableBlockProps {
   block: Block;
