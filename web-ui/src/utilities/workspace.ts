@@ -6,7 +6,7 @@ export function randomizeBlockPositions() {
   applyBlockGravity()
 }
 
-export function applyBlockGravity() {
+function applyBlockGravity() {
   for (let i = 1; i < workspaceSnap.dimensions[1]; i++) {
     getBlocksAtHeight(i).forEach(block => {
       while (isBlockFloating(block)) block.position.y--;
@@ -14,11 +14,11 @@ export function applyBlockGravity() {
   }
 }
 
-export function getBlocksAtHeight(height: number) {
+function getBlocksAtHeight(height: number) {
   return workspaceSnap.placedBlocks.filter((b) => b.position.y === height)
 }
 
-export function getRandomFreePosition() {
+function getRandomFreePosition() {
   const [width, height, depth] = workspaceSnap.dimensions;
   const maxAttempts = 1000; // Maximum number of attempts to find a free position
   let attempts = 0;
@@ -57,7 +57,7 @@ export function findNextFreePosition() {
   throw new Error("no free positions left")
 }
 
-export function isPositionOccupied(position: Position) {
+function isPositionOccupied(position: Position) {
   return workspaceSnap.placedBlocks.some(b => (
     b.position.x === position.x
     && b.position.z === position.z
