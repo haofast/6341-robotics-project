@@ -1,9 +1,8 @@
-import { Console } from "./Console";
-import { Button } from "./ui/button";
-import { Card } from "./ui/card";
+import { Console } from "../common/Console";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 
-export function SidePanel() {
-
+export function ControlPanel() {
   return (
     <Card className="fixed top-6 right-6 bottom-6 w-80 p-4 overflow-y-auto bg-background/75 backdrop-blur">
       <div className="space-y-2">

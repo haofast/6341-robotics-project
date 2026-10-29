@@ -49,5 +49,4 @@ export class PositionUtil {
   public static isOnFloor(p: Position) {
     return p[D.superior] === 0
   }
-
 }

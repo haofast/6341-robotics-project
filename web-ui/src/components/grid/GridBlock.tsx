@@ -12,7 +12,7 @@ interface DraggableBlockProps {
   block: Block;
 }
 
-export const DraggableBlock: React.FC<DraggableBlockProps> = ({ block }) => {
+export const GridBlock: React.FC<DraggableBlockProps> = ({ block }) => {
   const { dimensions, selectedBlock } = useSnapshot(workspaceState)
   const meshRef = useRef<THREE.Mesh>(null!);
   const transformRef = useRef<TransformControlsImpl>(null);
@@ -30,9 +30,9 @@ export const DraggableBlock: React.FC<DraggableBlockProps> = ({ block }) => {
       const meshRefPosition = meshRef.current.position;
       const { width, height, depth } = dimensions;
 
-      let lateral = Math.max(0, Math.min(width - 1, Math.round(meshRefPosition.x - 0.5)));
-      let superior = Math.max(0, Math.min(height - 1, Math.round(meshRefPosition.y - 0.5)));
-      let anterior = Math.max(0, Math.min(depth - 1, Math.round(meshRefPosition.z - 0.5)));
+      const lateral = Math.max(0, Math.min(width - 1, Math.round(meshRefPosition.x - 0.5)));
+      const superior = Math.max(0, Math.min(height - 1, Math.round(meshRefPosition.y - 0.5)));
+      const anterior = Math.max(0, Math.min(depth - 1, Math.round(meshRefPosition.z - 0.5)));
 
       const dPosition = { lateral, superior, anterior }
       const position = PositionUtil.dPosToPos(dPosition)

@@ -3,9 +3,9 @@ import { useSnapshot } from 'valtio';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Grid } from '@react-three/drei';
 import { workspaceState } from '@/state/workspace';
-import { DraggableBlock } from './DraggableBlock';
-import * as THREE from 'three';
+import { GridBlock } from './GridBlock';
 import { WorkspaceUtils } from '@/utilities/workspace';
+import * as THREE from 'three';
 
 
 export const GridSpace: React.FC = () => {
@@ -57,7 +57,7 @@ export const GridSpace: React.FC = () => {
       </lineSegments>
 
       {placedBlocks.map((block) => (
-        <DraggableBlock
+        <GridBlock
           key={block.id}
           block={block}
         />

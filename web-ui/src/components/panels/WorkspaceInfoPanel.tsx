@@ -1,9 +1,9 @@
-import { Card } from "./ui/card";
+import { Card } from "../ui/card";
 import { workspaceState } from "@/state/workspace";
 import { useSnapshot } from "valtio";
 import { BlockUtil } from "@/utilities/block";
 
-export function WorkspacePanel() {
+export function WorkspaceInfoPanel() {
   const { selectedBlock } = useSnapshot(workspaceState)
 
   return (

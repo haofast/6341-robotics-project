@@ -5,6 +5,17 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnusedLabels": false,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "erasableSyntaxOnly": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": true,
     "paths": {
       "@/*": ["./src/*"]
     }

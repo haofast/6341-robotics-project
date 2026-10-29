@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react"
-import { Button } from "./ui/button"
+import { Button } from "../ui/button"
 
 interface ToolButtonProps {
   mainIcon: LucideIcon,
