@@ -2,7 +2,7 @@ import { Console } from "../common/Console";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 
-export function ControlPanel() {
+export function ControlsPanel() {
   return (
     <Card className="fixed top-6 right-6 bottom-6 w-80 p-4 overflow-y-auto bg-background/75 backdrop-blur">
       <div className="space-y-2">

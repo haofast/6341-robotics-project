@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react"
 import { Button } from "../ui/button"
 
-interface ToolButtonProps {
+interface IconButtonProps {
   mainIcon: LucideIcon,
   accentIcon?: LucideIcon,
   iconColor?: string,
@@ -10,14 +10,14 @@ interface ToolButtonProps {
   action: () => void
 }
 
-export function ToolButton({
+export function IconButton({
   mainIcon: MainIcon,
   accentIcon: AccentIcon,
   iconColor,
   disabled,
   badgeCount,
   action,
-}: ToolButtonProps) {
+}: IconButtonProps) {
   return (
     <Button
       className="relative p-5"

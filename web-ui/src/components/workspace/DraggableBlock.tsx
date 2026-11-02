@@ -12,7 +12,7 @@ interface DraggableBlockProps {
   block: Block;
 }
 
-export const GridBlock: React.FC<DraggableBlockProps> = ({ block }) => {
+export const DraggableBlock: React.FC<DraggableBlockProps> = ({ block }) => {
   const { dimensions, selectedBlock } = useSnapshot(workspaceState)
   const meshRef = useRef<THREE.Mesh>(null!);
   const transformRef = useRef<TransformControlsImpl>(null);

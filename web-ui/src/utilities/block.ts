@@ -21,6 +21,6 @@ export class BlockUtil {
   }
   
   public static isInValidPosition(block: Block) {
-    return this.isOverlapping(block) || this.isFloating(block)
+    return !this.isOverlapping(block) && !this.isFloating(block)
   }
 }

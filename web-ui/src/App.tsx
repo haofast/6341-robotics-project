@@ -1,15 +1,15 @@
-import { ControlPanel } from "./components/panels/ControlPanel"
-import { ToolPanel } from "./components/panels/ToolPanel"
-import { GridSpace } from "./components/grid/GridSpace"
+import { ControlsPanel } from "./components/panels/ControlsPanel"
+import { WorkspaceToolsPanel } from "./components/panels/WorkspaceToolsPanel"
+import { GridSpace } from "./components/workspace/GridSpace"
 import { WorkspaceInfoPanel } from "./components/panels/WorkspaceInfoPanel"
 
 export function App() {
   return (
     <div className="w-screen h-screen">
       <GridSpace />
-      <ToolPanel />
-      <ControlPanel />
+      <WorkspaceToolsPanel />
       <WorkspaceInfoPanel />
+      <ControlsPanel />
     </div>
   )
 }
