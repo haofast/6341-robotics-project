@@ -1,5 +1,5 @@
-import type { LucideIcon } from "lucide-react"
-import { Button } from "../ui/button"
+import type { LucideIcon } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface IconButtonProps {
   mainIcon: LucideIcon,
@@ -36,5 +36,5 @@ export function IconButton({
         </div>
       )}
     </Button>
-  )
+  );
 }

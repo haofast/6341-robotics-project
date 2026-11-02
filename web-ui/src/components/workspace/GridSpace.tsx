@@ -9,7 +9,7 @@ import { WorkspaceUtils } from '@/utilities/workspace';
 
 
 export const GridSpace: React.FC = () => {
-  const { placedBlocks, dimensions } = useSnapshot(workspaceState)
+  const { placedBlocks, dimensions } = useSnapshot(workspaceState);
   const { width, height, depth } = dimensions;
 
   function handleCanvasClick(event: React.PointerEvent<HTMLDivElement>) {

@@ -14,7 +14,7 @@ export function ControlsPanel() {
             type: "info",
             timestamp: new Date(),
             text: "end effector at (0,0,0)",
-          }
+          },
         ]} />
       </div>
       <hr />
@@ -27,7 +27,7 @@ export function ControlsPanel() {
             type: "info",
             timestamp: new Date(),
             text: "positioning uploaded",
-          }
+          },
         ]} />
       </div>
       <hr />
@@ -45,5 +45,5 @@ export function ControlsPanel() {
         </div>
       </div>
     </Card>
-  )
+  );
 }

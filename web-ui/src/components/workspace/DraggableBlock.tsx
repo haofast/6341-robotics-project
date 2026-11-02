@@ -13,16 +13,16 @@ interface DraggableBlockProps {
 }
 
 export const DraggableBlock: React.FC<DraggableBlockProps> = ({ block }) => {
-  const { dimensions, selectedBlock } = useSnapshot(workspaceState)
+  const { dimensions, selectedBlock } = useSnapshot(workspaceState);
   const meshRef = useRef<THREE.Mesh>(null!);
   const transformRef = useRef<TransformControlsImpl>(null);
 
   function getAdjustedBlockPos(position: Position) {
-    const positionVector = PositionUtil.posTo3DVec(position)
-    positionVector[0] += 0.5
-    positionVector[1] += 0.5
-    positionVector[2] += 0.5
-    return positionVector
+    const positionVector = PositionUtil.posTo3DVec(position);
+    positionVector[0] += 0.5;
+    positionVector[1] += 0.5;
+    positionVector[2] += 0.5;
+    return positionVector;
   }
 
   function handleObjectChange() {
@@ -34,11 +34,11 @@ export const DraggableBlock: React.FC<DraggableBlockProps> = ({ block }) => {
       const superior = Math.max(0, Math.min(height - 1, Math.round(meshRefPosition.y - 0.5)));
       const anterior = Math.max(0, Math.min(depth - 1, Math.round(meshRefPosition.z - 0.5)));
 
-      const dPosition = { lateral, superior, anterior }
-      const position = PositionUtil.dPosToPos(dPosition)
+      const dPosition = { lateral, superior, anterior };
+      const position = PositionUtil.dPosToPos(dPosition);
 
-      WorkspaceUtils.updateBlockPosition(block, position)
-      meshRefPosition.set(...getAdjustedBlockPos(position))
+      WorkspaceUtils.updateBlockPosition(block, position);
+      meshRefPosition.set(...getAdjustedBlockPos(position));
     }
   }
 

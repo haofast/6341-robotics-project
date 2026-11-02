@@ -15,5 +15,5 @@ export function Console({ logs }: ConsoleProps) {
         </div>
       ))}
     </div>
-  )
+  );
 }

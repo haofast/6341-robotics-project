@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",

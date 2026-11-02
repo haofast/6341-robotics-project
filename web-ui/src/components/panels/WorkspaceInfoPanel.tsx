@@ -4,7 +4,7 @@ import { useSnapshot } from "valtio";
 import { BlockUtil } from "@/utilities/block";
 
 export function WorkspaceInfoPanel() {
-  const { selectedBlock } = useSnapshot(workspaceState)
+  const { selectedBlock } = useSnapshot(workspaceState);
 
   return (
     <>
@@ -29,5 +29,5 @@ export function WorkspaceInfoPanel() {
         </Card>
       )}
     </>
-  )
+  );
 }

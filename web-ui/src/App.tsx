@@ -1,7 +1,7 @@
-import { ControlsPanel } from "./components/panels/ControlsPanel"
-import { WorkspaceToolsPanel } from "./components/panels/WorkspaceToolsPanel"
-import { GridSpace } from "./components/workspace/GridSpace"
-import { WorkspaceInfoPanel } from "./components/panels/WorkspaceInfoPanel"
+import { ControlsPanel } from "./components/panels/ControlsPanel";
+import { WorkspaceToolsPanel } from "./components/panels/WorkspaceToolsPanel";
+import { GridSpace } from "./components/workspace/GridSpace";
+import { WorkspaceInfoPanel } from "./components/panels/WorkspaceInfoPanel";
 
 export function App() {
   return (
@@ -11,7 +11,7 @@ export function App() {
       <WorkspaceInfoPanel />
       <ControlsPanel />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

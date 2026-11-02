@@ -7,12 +7,12 @@ import { v4 as uuid } from 'uuid';
 export class WorkspaceUtils {
 
   public static clear() {
-    workspaceState.placedBlocks = []
-    workspaceState.selectedBlock = null
+    workspaceState.placedBlocks = [];
+    workspaceState.selectedBlock = null;
   }
 
   public static addBlock(block: Omit<Block, "id" | "position">) {
-    const newBlock = { id: uuid(), position: WorkspaceUtils.getNextFreePosition(), ...block }
+    const newBlock = { id: uuid(), position: WorkspaceUtils.getNextFreePosition(), ...block };
     workspaceState.placedBlocks.push(newBlock);
     workspaceState.selectedBlock = newBlock;
   }
@@ -22,18 +22,18 @@ export class WorkspaceUtils {
   }
 
   public static setSelectedBlock(blockId: string | null) {
-    workspaceState.selectedBlock = workspaceState.placedBlocks.find((b) => b.id === blockId) ?? null
+    workspaceState.selectedBlock = workspaceState.placedBlocks.find((b) => b.id === blockId) ?? null;
   }
 
   public static scatterBlocks() {
-    this.randomizeBlockPositions()
-    this.applyGravityToBlocksPositions()
+    this.randomizeBlockPositions();
+    this.applyGravityToBlocksPositions();
   }
 
   private static randomizeBlockPositions() {
     workspaceState.placedBlocks.forEach((block) => {
-      block.position = this.getRandomFreePosition()
-    })
+      block.position = this.getRandomFreePosition();
+    });
   }
 
   private static applyGravityToBlocksPositions() {
@@ -44,10 +44,10 @@ export class WorkspaceUtils {
 
   public static getNextFreePosition() {
     for (const position of this.getCoordinates()) {
-      if (this.isPositionFree(position)) return position
+      if (this.isPositionFree(position)) return position;
     }
 
-    throw new Error("no free positions left")
+    throw new Error("no free positions left");
   }
 
   private static getRandomFreePosition() {
@@ -60,32 +60,32 @@ export class WorkspaceUtils {
   }
 
   private static getRandomPosition() {
-    const { width, height, depth } = workspaceState.dimensions
-    const lateral = Math.floor(Math.random() * width)
-    const superior = Math.floor(Math.random() * height)
-    const anterior = Math.floor(Math.random() * depth)
-    return PositionUtil.dPosToPos({ lateral, superior, anterior })
+    const { width, height, depth } = workspaceState.dimensions;
+    const lateral = Math.floor(Math.random() * width);
+    const superior = Math.floor(Math.random() * height);
+    const anterior = Math.floor(Math.random() * depth);
+    return PositionUtil.dPosToPos({ lateral, superior, anterior });
   }
 
   private static isPositionFree(position: Position) {
     return !workspaceState.placedBlocks.some((block) => (
       PositionUtil.isSame(block.position, position)
-    ))
+    ));
   }
 
   private static getBlocksAtHeight(height: number) {
     return workspaceState.placedBlocks.filter((block) => (
       block.position[D.superior] === height
-    ))
+    ));
   }
 
   private static * getCoordinates() {
-    const { width, height, depth } = workspaceState.dimensions
+    const { width, height, depth } = workspaceState.dimensions;
 
     for (let superior = 0; superior < height; superior++) {
       for (let anterior = 0; anterior < depth; anterior++) {
         for (let lateral = 0; lateral < width; lateral++) {
-          yield PositionUtil.dPosToPos({ lateral, superior, anterior })
+          yield PositionUtil.dPosToPos({ lateral, superior, anterior });
         }
       }
     }

@@ -20,16 +20,16 @@ export function WorkspaceToolsPanel() {
       <IconButton mainIcon={DicesIcon} action={() => WorkspaceUtils.scatterBlocks()} />
       <IconButton mainIcon={BroomSparklesIcon} action={() => WorkspaceUtils.clear()} />
     </Card>
-  )
+  );
 }
 
 export function AddBlockButton({
   iconColor,
   blockColor,
 }: AddBlockButtonProps) {
-  const { placedBlocks } = useSnapshot(workspaceState)
-  const numberOffPlacedBlocksOfColor = placedBlocks.filter((b) => b.color === blockColor).length
-  const numberOfBlocksOfColorRemaining = MAX_BLOCKS_PER_COLOR[blockColor] - numberOffPlacedBlocksOfColor
+  const { placedBlocks } = useSnapshot(workspaceState);
+  const numberOffPlacedBlocksOfColor = placedBlocks.filter((b) => b.color === blockColor).length;
+  const numberOfBlocksOfColorRemaining = MAX_BLOCKS_PER_COLOR[blockColor] - numberOffPlacedBlocksOfColor;
 
   return (
     <IconButton
@@ -40,5 +40,5 @@ export function AddBlockButton({
       badgeCount={numberOfBlocksOfColorRemaining}
       action={() => WorkspaceUtils.addBlock({ color: blockColor })}
     />
-  )
+  );
 }
