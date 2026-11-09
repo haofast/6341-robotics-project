@@ -1,6 +1,7 @@
 import { workspaceState } from "@/state/workspace";
 import type { Block } from "@/types/common";
 import { D, PositionUtil } from "./position";
+import { COLOR } from "@/constants/color";
 
 export class BlockUtil {
 
@@ -22,5 +23,12 @@ export class BlockUtil {
   
   public static isInValidPosition(block: Block) {
     return !this.isOverlapping(block) && !this.isFloating(block);
+  }
+
+  public static getColorString(block: Block) {
+    for (const [colorName, colorCode] of Object.entries(COLOR)) {
+      if (block.color === colorCode) return colorName.toLowerCase();
+    }
+    return "";
   }
 }
