@@ -1,10 +1,17 @@
+import { ControlsPanel } from "./components/panels/ControlsPanel";
+import { WorkspaceToolsPanel } from "./components/panels/WorkspaceToolsPanel";
+import { GridSpace } from "./components/workspace/GridSpace";
+import { WorkspaceInfoPanel } from "./components/panels/WorkspaceInfoPanel";
 
-function App() {
+export function App() {
   return (
-    <div className="p-4">
-      hello world
+    <div className="w-screen h-screen">
+      <GridSpace />
+      <WorkspaceToolsPanel />
+      <WorkspaceInfoPanel />
+      <ControlsPanel />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
