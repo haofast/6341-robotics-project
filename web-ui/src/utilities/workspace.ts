@@ -30,6 +30,10 @@ export class WorkspaceUtils {
     this.applyGravityToBlocksPositions();
   }
 
+  public static isValidConfiguration() {
+    return workspaceState.placedBlocks.every((b) => BlockUtil.isInValidPosition(b));
+  }
+
   private static randomizeBlockPositions() {
     workspaceState.placedBlocks.forEach((block) => {
       block.position = this.getRandomFreePosition();

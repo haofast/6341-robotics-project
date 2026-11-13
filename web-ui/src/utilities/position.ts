@@ -2,14 +2,14 @@ import type { DPosition, Position } from "@/types/common";
 
 export const D = {
   lateral: "x",
-  superior: "z",
-  anterior: "y",
+  superior: "y",
+  anterior: "z",
 } as const;
 
 export const D_ = {
   x: "lateral",
-  y: "anterior",
-  z: "superior",
+  z: "anterior",
+  y: "superior",
 } as const;
 
 export class PositionUtil {

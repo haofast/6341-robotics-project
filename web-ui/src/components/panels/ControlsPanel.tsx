@@ -6,9 +6,15 @@ import { workspaceState } from "@/state/workspace";
 import { getMotionStatus, getPositionStatus, postMotionStart, postMotionStop, postPosition, type GetMotionStatusResponse, type GetPositionStatusResponse, type PostPositionRequest } from "@/utilities/api";
 import { BlockUtil } from "@/utilities/block";
 import { useState } from "react";
+import { WorkspaceUtils } from "@/utilities/workspace";
+import { toast } from "../ui/toast";
+import { addLogConsoleEntry, logConsoleState } from "@/state/log-console";
+import { positionConsoleState } from "@/state/position-console";
 
 export function ControlsPanel() {
   const workspaceSnap = useSnapshot(workspaceState);
+  const positionConsoleSnap = useSnapshot(positionConsoleState);
+  const logConsoleSnap = useSnapshot(logConsoleState);
 
   const [positionStatus, setPositionStatus] = useState<GetPositionStatusResponse>();
   const [motionStatus, setMotionStatus] = useState<GetMotionStatusResponse>();
@@ -39,21 +45,44 @@ export function ControlsPanel() {
     };
   }
 
+  function logSuccess(title: string, description: string) {
+    toast.add({ type: "success", title, description });
+    addLogConsoleEntry({ type: "error", text: description });
+  }
+
+  function logError(title: string, description: string) {
+    toast.add({ type: "error", title, description });
+    addLogConsoleEntry({ type: "error", text: description });
+  }
+
   async function uploadPosition() {
-    await postPosition(buildPositionRequest());
-    setPositionStatus(await getPositionStatus());
-    pollPositionStatus();
+    if (!WorkspaceUtils.isValidConfiguration()) {
+      return logError("Configuration not uploaded", "Blocks cannot be overlapping or floating!");
+    }
+
+    await postPosition(buildPositionRequest())
+      .then(() => logSuccess("Request succeeded", "Position uploaded"))
+      .then(getPositionStatus)
+      .then(setPositionStatus)
+      .then(pollPositionStatus)
+      .catch((e) => logError("Request failed", e.message));
   }
 
   async function startMotion() {
-    await postMotionStart();
-    setMotionStatus(await getMotionStatus());
-    pollMotionStatus();
+    await postMotionStart()
+      .then(() => logSuccess("Request succeeded", "Motion started"))
+      .then(getMotionStatus)
+      .then(setMotionStatus)
+      .then(pollMotionStatus)
+      .catch((e) => logError("Request failed", e.message));
   }
 
   async function stopMotion() {
-    await postMotionStop();
-    setMotionStatus(await getMotionStatus());
+    await postMotionStop()
+      .then(() => logSuccess("Request succeeded", "Motion stopped"))
+      .then(getMotionStatus)
+      .then(setMotionStatus)
+      .catch((e) => logError("Request failed", e.message));
   }
 
   async function pollPositionStatus() {
@@ -76,26 +105,14 @@ export function ControlsPanel() {
         <div className="text-[10px] font-light tracking-widest">
           POSITION CONSOLE
         </div>
-        <Console logs={[
-          {
-            type: "info",
-            timestamp: new Date(),
-            text: "end effector at (0,0,0)",
-          },
-        ]} />
+        <Console entries={positionConsoleSnap.entries} />
       </div>
       <hr />
       <div className="space-y-2">
         <div className="text-[10px] font-light tracking-widest">
           LOG CONSOLE
         </div>
-        <Console logs={[
-          {
-            type: "info",
-            timestamp: new Date(),
-            text: "positioning uploaded",
-          },
-        ]} />
+        <Console entries={logConsoleSnap.entries} />
       </div>
       <hr />
       <div className="space-y-2">
