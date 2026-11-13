@@ -1,0 +1,765 @@
+{
+  "info": {
+    "_postman_id": "d37b59ff-4fc9-4c37-8cb3-3a322e3b7af2",
+    "name": "Block Placement API - Contract Tests",
+    "description": "Postman tests derived from api-contracts.md.\n\nSet the collection variable baseUrl to the API origin (default: [http://localhost:8000](http://localhost:8000)).\n\nImportant: requests marked STATE-DEPENDENT require the stated server state. A full collection run may not satisfy those preconditions and may therefore produce expected failures. Run them individually or arrange the backend state first.\n\nThe contract does not define coordinate bounds, integer-only constraints, duplicate-position behavior, error response bodies, or timing thresholds; this collection does not assert those unspecified details.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51732412",
+    "_collection_link": "https://go.postman.co/collection/51732412-d37b59ff-4fc9-4c37-8cb3-3a322e3b7af2?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1. Status endpoints",
+      "item": [
+        {
+          "name": "GET Position Status - 200 and schema",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"position status payload matches the contract\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.be.an(\"object\");",
+                  "    pm.expect(body).to.have.property(\"status\");",
+                  "    pm.expect([\"pending\", \"running\", \"succeeded\", \"failed\"]).to.include(body.status);",
+                  "    pm.expect(body).to.have.property(\"message\");",
+                  "    pm.expect(body.message).to.be.a(\"string\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/position/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "position",
+                "status"
+              ]
+            },
+            "description": "Checks the latest motion-planning request status. The contract permits all four status values regardless of whether planning is pending, running, succeeded, or failed."
+          },
+          "response": []
+        },
+        {
+          "name": "GET Motion Status - 200 and schema",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"motion status payload matches the contract\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.be.an(\"object\");",
+                  "    pm.expect(body).to.have.property(\"status\");",
+                  "    pm.expect([\"pending\", \"running\", \"succeeded\", \"failed\"]).to.include(body.status);",
+                  "    pm.expect(body).to.have.property(\"message\");",
+                  "    pm.expect(body.message).to.be.a(\"string\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/motion/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "motion",
+                "status"
+              ]
+            },
+            "description": "Checks the active or most recent robot-motion execution status. The contract specifies the same four status values and a string message."
+          },
+          "response": []
+        }
+      ],
+      "description": "Read-only checks. Both status endpoints are specified to return HTTP 200 and a JSON object with a status enum and string message."
+    },
+    {
+      "name": "2. Position submission",
+      "item": [
+        {
+          "name": "Valid block positions - 204",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"returns 204 No Content\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "pm.test(\"response body is empty\", function () {",
+                  "    pm.expect(pm.response.text()).to.eql(\"\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blocks\": [\n    {\n      \"color\": \"red\",\n      \"posX\": 0,\n      \"posY\": 0,\n      \"posZ\": 0\n    },\n    {\n      \"color\": \"green\",\n      \"posX\": 1,\n      \"posY\": 0,\n      \"posZ\": 0\n    },\n    {\n      \"color\": \"blue\",\n      \"posX\": 1,\n      \"posY\": 1,\n      \"posZ\": 0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/position",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "position"
+              ]
+            },
+            "description": "Precondition: motion planning is not already active. Sends three valid blocks using lowercase colors and numeric coordinates. Expected: 204 No Content. The response should not wait for planning to finish."
+          },
+          "response": []
+        },
+        {
+          "name": "Empty blocks array - 204",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 204 No Content\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "pm.test(\"response body is empty\", function () {",
+                  "    pm.expect(pm.response.text()).to.eql(\"\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blocks\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/position",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "position"
+              ]
+            },
+            "description": "The contract declares blocks as an array and does not specify a minimum item count. This case treats an empty array as structurally valid; expected: 204 No Content."
+          },
+          "response": []
+        },
+        {
+          "name": "Malformed JSON - 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 400 as specified by the contract\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"blocks\": [",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/position",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "position"
+              ]
+            },
+            "description": "Sends malformed JSON. Expected: 400 Bad Request. The contract does not define an error response body, so this test checks only the status code."
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid color casing - 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 400 as specified by the contract\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blocks\": [\n    {\n      \"color\": \"Red\",\n      \"posX\": 0,\n      \"posY\": 0,\n      \"posZ\": 0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/position",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "position"
+              ]
+            },
+            "description": "The allowed color values are lowercase red, green, and blue. Expected: 400 Bad Request for uppercase 'Red'."
+          },
+          "response": []
+        },
+        {
+          "name": "Non-numeric coordinate - 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 400 as specified by the contract\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blocks\": [\n    {\n      \"color\": \"red\",\n      \"posX\": \"0\",\n      \"posY\": 0,\n      \"posZ\": 0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/position",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "position"
+              ]
+            },
+            "description": "Coordinates are specified as numbers. Expected: 400 Bad Request when posX is a string."
+          },
+          "response": []
+        },
+        {
+          "name": "Missing blocks property - 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 400 as specified by the contract\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notBlocks\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/position",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "position"
+              ]
+            },
+            "description": "The request payload must contain a blocks array. Expected: 400 Bad Request when blocks is missing."
+          },
+          "response": []
+        },
+        {
+          "name": "blocks is not an array - 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 400 as specified by the contract\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blocks\": {\n    \"color\": \"red\",\n    \"posX\": 0,\n    \"posY\": 0,\n    \"posZ\": 0\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/position",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "position"
+              ]
+            },
+            "description": "The blocks property is specified as an array. Expected: 400 Bad Request when blocks is an object."
+          },
+          "response": []
+        },
+        {
+          "name": "Missing coordinate field - 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 400 as specified by the contract\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blocks\": [\n    {\n      \"color\": \"red\",\n      \"posX\": 0,\n      \"posY\": 0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/position",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "position"
+              ]
+            },
+            "description": "Each block requires posX, posY, and posZ numeric coordinate fields. Expected: 400 Bad Request when posZ is missing."
+          },
+          "response": []
+        },
+        {
+          "name": "Floating block - 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"returns 400 as specified by the contract\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blocks\": [\n    {\n      \"color\": \"red\",\n      \"posX\": 0,\n      \"posY\": 0,\n      \"posZ\": 0\n    },\n    {\n      \"color\": \"green\",\n      \"posX\": 1,\n      \"posY\": 0,\n      \"posZ\": 0\n    },\n    {\n      \"color\": \"blue\",\n      \"posX\": 2,\n      \"posY\": 1,\n      \"posZ\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/position",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "position"
+              ]
+            },
+            "description": "STATE-DEPENDENT: run only while another motion-planning process is actively in progress. Expected: 409 Conflict. Do not treat this request as a deterministic part of a normal full-collection run."
+          },
+          "response": []
+        },
+        {
+          "name": "Blocks occupying same position - 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"returns 400 as specified by the contract\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blocks\": [\n    {\n      \"color\": \"red\",\n      \"posX\": 0,\n      \"posY\": 0,\n      \"posZ\": 0\n    },\n    {\n      \"color\": \"green\",\n      \"posX\": 0,\n      \"posY\": 0,\n      \"posZ\": 0\n    },\n    {\n      \"color\": \"blue\",\n      \"posX\": 2,\n      \"posY\": 1,\n      \"posZ\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/position",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "position"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "POST /api/v1/position tests. A valid request should return 204 immediately after positions are recorded and planning is initiated; the contract does not specify a response-time threshold."
+    },
+    {
+      "name": "3. Motion start",
+      "item": [
+        {
+          "name": "No completed plan available - 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 409 as specified by the contract\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/motion/start",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "motion",
+                "start"
+              ]
+            },
+            "description": "STATE-DEPENDENT: run when no position request has been submitted, while planning is incomplete, or after planning has failed. Expected: 409 Conflict."
+          },
+          "response": []
+        },
+        {
+          "name": "Completed plan available - 204",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 204 No Content\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "pm.test(\"response body is empty\", function () {",
+                  "    pm.expect(pm.response.text()).to.eql(\"\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/motion/start",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "motion",
+                "start"
+              ]
+            },
+            "description": "STATE-DEPENDENT: run after GET /api/v1/position/status reports status='succeeded'. Expected: 204 No Content and an empty response body."
+          },
+          "response": []
+        }
+      ],
+      "description": "POST /api/v1/motion/start tests. The success and conflict cases require different server states; run the appropriate case only when its precondition is true."
+    },
+    {
+      "name": "4. Motion stop",
+      "item": [
+        {
+          "name": "No robot motion active - 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 409 as specified by the contract\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/motion/stop",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "motion",
+                "stop"
+              ]
+            },
+            "description": "STATE-DEPENDENT: run only when no robot motion is active. Expected: 409 Conflict."
+          },
+          "response": []
+        },
+        {
+          "name": "Robot motion active - 204",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"returns 204 No Content\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "pm.test(\"response body is empty\", function () {",
+                  "    pm.expect(pm.response.text()).to.eql(\"\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/motion/stop",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "motion",
+                "stop"
+              ]
+            },
+            "description": "STATE-DEPENDENT: run while robot motion is active. Expected: 204 No Content and an empty response body."
+          },
+          "response": []
+        }
+      ],
+      "description": "POST /api/v1/motion/stop tests. The success and conflict cases require different robot-motion states."
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ]
+}
