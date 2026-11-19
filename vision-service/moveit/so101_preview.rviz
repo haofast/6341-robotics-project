@@ -1,0 +1,34 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+Visualization Manager:
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Cell Size: 0.05
+      Value: true
+    - Class: moveit_rviz_plugin/MotionPlanning
+      Name: MotionPlanning
+      Enabled: true
+      Value: true
+      Robot Description: robot_description
+      Planning Scene Topic: /monitored_planning_scene
+      Planned Path:
+        Loop Animation: true
+        Show Robot Visual: true
+        State Display Time: 0.15 s
+        Trajectory Topic: /display_planned_path
+  Global Options:
+    Fixed Frame: base_link
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 0.65
+      Pitch: 0.55
+      Yaw: 0.8
+      Target Frame: base_link
+      Focal Point:
+        X: 0.10
+        Y: 0.0
+        Z: 0.12
+  Value: true

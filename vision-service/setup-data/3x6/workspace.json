@@ -1,0 +1,44 @@
+{
+  "cameras": {
+    "top_down": 0
+  },
+  "reference_images": {
+    "top_down": "top-down.jpg"
+  },
+  "board": {
+    "columns": 6,
+    "rows": 3,
+    "square_size_mm": 38.1,
+    "width_mm": 228.6,
+    "height_mm": 114.3,
+    "corner_order": [
+      "origin",
+      "positive_x",
+      "opposite",
+      "positive_y"
+    ],
+    "top_down_corners_px": [
+      [
+        478.9317932128906,
+        60.67274475097656
+      ],
+      [
+        1469.413818359375,
+        86.31925964355469
+      ],
+      [
+        1456.9239501953125,
+        564.3826904296875
+      ],
+      [
+        471.8143005371094,
+        547.6219482421875
+      ]
+    ],
+    "top_down_frame_size_px": [
+      1920,
+      1080
+    ]
+  },
+  "cube_size_mm": 25.4
+}

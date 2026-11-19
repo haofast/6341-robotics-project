@@ -1,0 +1,19 @@
+{
+  "columns": 6,
+  "poses": {
+    "first": {
+      "shoulder_pan.pos": 25.406593406593405,
+      "shoulder_lift.pos": -14.32967032967033,
+      "elbow_flex.pos": 46.637362637362635,
+      "wrist_flex.pos": 73.75824175824175,
+      "wrist_roll.pos": 124.35164835164835
+    },
+    "last": {
+      "shoulder_pan.pos": -54.32967032967033,
+      "shoulder_lift.pos": -12.923076923076923,
+      "elbow_flex.pos": 46.637362637362635,
+      "wrist_flex.pos": 67.51648351648352,
+      "wrist_roll.pos": 40.83516483516483
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "origin": {
+    "shoulder_pan.pos": 25.318681318681318,
+    "shoulder_lift.pos": -15.384615384615385,
+    "elbow_flex.pos": 41.362637362637365,
+    "wrist_flex.pos": 73.49450549450549,
+    "wrist_roll.pos": 118.98901098901099
+  },
+  "positive_x": {
+    "shoulder_pan.pos": -62.065934065934066,
+    "shoulder_lift.pos": -1.3186813186813187,
+    "elbow_flex.pos": 30.46153846153846,
+    "wrist_flex.pos": 68.3076923076923,
+    "wrist_roll.pos": 41.62637362637363
+  },
+  "opposite": {
+    "shoulder_pan.pos": -43.51648351648352,
+    "shoulder_lift.pos": 52.57142857142857,
+    "elbow_flex.pos": -52.175824175824175,
+    "wrist_flex.pos": 101.0989010989011,
+    "wrist_roll.pos": 63.51648351648352
+  },
+  "positive_y": {
+    "shoulder_pan.pos": 10.54945054945055,
+    "shoulder_lift.pos": 44.30769230769231,
+    "elbow_flex.pos": -36.61538461538461,
+    "wrist_flex.pos": 101.01098901098901,
+    "wrist_roll.pos": 111.25274725274726
+  }
+}

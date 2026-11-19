@@ -1,0 +1,11 @@
+First we ensure that we config the workspace:
+
+1. 
+python vision-service/setup.py --top-camera 0 --columns 6 \
+  --output vision-service/setup-data/3x6 
+
+2. 
+python vision-service/trace_perimeter.py \
+  vision-service/setup-data/3x6/workspace.json \
+  --poses vision-service/setup-data/3x6/perimeter_poses.json \
+  --teach
